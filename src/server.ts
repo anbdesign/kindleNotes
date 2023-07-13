@@ -6,7 +6,7 @@ require('dotenv').config()
 
 
 const app = express()
-const port = process.env.PORT || 3001
+const port = process.env.PORT || 6001
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
