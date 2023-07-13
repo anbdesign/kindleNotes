@@ -1,7 +1,17 @@
 {
-  "name": "vanilla-basic",
-  "version": "1.0.0",
+  "name": "kindlenotes",
+  "version": "2.0.0",
   "scripts": {
-    "start": "sirv ./src public --cors --single --no-clear --port 8000"
+    "build": "tsc",
+    "watch": "tsc -w",
+    "prestart": "npm run build",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.2",
+    "typescript": "^5.1.6"
   }
 }
