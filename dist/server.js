@@ -1,10 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const sgMail = require('@sendgrid/mail');
+const postmark = require('postmark');
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 6001;
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const postmarkClient = new postmark.ServerClient(process.env.POSTMARK_SERVER_TOKEN);
 app.use(express.static('dist/app'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -23,17 +23,30 @@ app.post('/', (request, result) => {
     console.log(input);
     const dateString = new Date().toString();
     console.log(`Form Submitted: ${input}`);
-    const message = {
-        to: process.env.THINGS_EMAIL,
-        from: process.env.FROM_EMAIL,
-        subject: input,
-        text: `Kindle Note from ${dateString}`
-    };
-    sgMail.send(message)
-        .then((response) => console.log('email sent...'))
-        .catch((error) => { console.log(error.message); });
-    result.send(`<h1>Todo Sent</h1>
-  <a href='/'>Send another?</a>
-  `);
+    let error = null;
+    postmarkClient
+        .sendEmail({
+        // From: process.env.FROM_EMAIL,
+        // From: "alex@anbdesign.com",
+        From: process.env.THINGS_EMAIL,
+        To: process.env.THINGS_EMAIL,
+        Subject: input,
+        TextBody: `Kindle Note from ${dateString}`,
+        MessageStream: 'outbound',
+    })
+        .then(() => {
+        console.log('email sent...');
+    })
+        .catch((err) => {
+        error = err;
+        console.log(err.message || err);
+    })
+        .finally(() => {
+        result.send(`
+        <h1>Email Attempted</h1>
+        <p>${error ? `Error: ${error.message || error}` : 'Todo Sent Successfully'}</p>
+        <a href='/'>Send another?</a>
+      `);
+    });
 });
 //# sourceMappingURL=server.js.map
