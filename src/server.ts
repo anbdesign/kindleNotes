@@ -46,9 +46,10 @@ app.post('/', (request, result) => {
   postmarkClient
     .sendEmail({
       // From: process.env.FROM_EMAIL,
-      // From: "alex@anbdesign.com",
-      From: process.env.THINGS_EMAIL,
+      From: "alex@anbdesign.com",
+      // From: process.env.THINGS_EMAIL,
       To: process.env.THINGS_EMAIL,
+      // To: "alex@anbdesign.com",
       Subject: input,
       TextBody: `Kindle Note from ${dateString}`,
       MessageStream: 'outbound',
