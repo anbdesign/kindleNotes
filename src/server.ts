@@ -45,11 +45,8 @@ app.post('/', (request, result) => {
 
   postmarkClient
     .sendEmail({
-      // From: process.env.FROM_EMAIL,
-      From: "alex@anbdesign.com",
-      // From: process.env.THINGS_EMAIL,
+      From: process.env.MY_EMAIL,
       To: process.env.THINGS_EMAIL,
-      // To: "alex@anbdesign.com",
       Subject: input,
       TextBody: `Kindle Note from ${dateString}`,
       MessageStream: 'outbound',
@@ -63,9 +60,11 @@ app.post('/', (request, result) => {
     })
     .finally(() => {
       result.send(`
-        <h1>Email Attempted</h1>
-        <p>${error ? `Error: ${error.message || error}` : 'Todo Sent Successfully'}</p>
-        <a href='/'>Send another?</a>
+        <body style="background:#121212; color:#e0e0e0; font-family: sans-serif; padding: 2rem;">
+          <h1 style="color:#ffffff;">Email Attempted</h1>
+          <p>${error ? `Error: ${error.message || error}` : 'Todo Sent Successfully'}</p>
+          <a href='/' style="color:#80b3ff; text-decoration:underline;">Send another?</a>
+        </body>
       `);
     });
 
