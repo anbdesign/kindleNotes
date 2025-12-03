@@ -21,7 +21,22 @@ app.listen(port, () => {
 app.post('/', (request, result) => {
     const input = request.body.textArea;
     console.log(input);
-    const dateString = new Date().toString();
+    const tz = process.env.TIMEZONE || 'America/Los_Angeles';
+    const now = new Date();
+    const datePart = new Intl.DateTimeFormat('en-US', {
+        timeZone: tz,
+        weekday: 'short',
+        month: 'short',
+        day: '2-digit',
+        year: 'numeric',
+    }).format(now);
+    const timePart = new Intl.DateTimeFormat('en-US', {
+        timeZone: tz,
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+    }).format(now);
+    const dateString = `${datePart} - ${timePart}`;
     console.log(`Form Submitted: ${input}`);
     let error = null;
     postmarkClient
